@@ -8,21 +8,20 @@ const loader = document.getElementById('loader');
 
 let apiQuotes = [];
 
-// Show Loading
-function load() {
+function showLoadingAnimation() {
     loader.hidden = false;
     quoteContainer.hidden = true;
 }
 
-// Hide Loader
-function complete() {
+function hideLoadingAnimation() {
     quoteContainer.hidden = false;
     loader.hidden = true;
 }
 
 // Show new quote
 function newQuote() {
-    load();
+    showLoadingAnimation();
+
     // Pick a random quote from apiQoutes array
     const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
 
@@ -33,7 +32,7 @@ function newQuote() {
         authorText.textContent = quote.author;
     }
 
-    // Check quote length do determine styling
+    // Check quote length to determine styling
     if(quote.text.length > 120) {
         quoteText.classList.add('long-quote');
     } else {
@@ -42,13 +41,13 @@ function newQuote() {
     
     // Set quote, hide loader
     quoteText.textContent = quote.text;
-    complete();
+    hideLoadingAnimation();
 
 }
 
 // Get Quotes From API
 async function getQuotes() {
-    load();
+    showLoadingAnimation();
     const apiUrl = 'https://type.fit/api/quotes';
     try {
         const response = await fetch(apiUrl);
@@ -56,10 +55,10 @@ async function getQuotes() {
         newQuote();
     } catch (error) {
         // Catch Error Here
+        alert('Something went wrong. ' + error);
     }
 }
 
-// Tweet Quote
 function tweetQuote() {
     const twitterUrl = `https://twitter.com/intent/tweet?text=${quoteText.textContent} - ${authorText.textContent}`;
     window.open(twitterUrl, '_blank')
